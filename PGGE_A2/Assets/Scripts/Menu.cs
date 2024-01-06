@@ -29,4 +29,10 @@ public class Menu : MonoBehaviour
         SceneManager.LoadScene("Multiplayer_Launcher");
     }
 
+    public void OnClickBack()
+    {
+        //Debug.Log("Loading menu");
+        SceneManager.LoadScene("Menu");
+    }
+
 }
