@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private float speed;
     private bool jump = false;
     private bool crouch = false;
+    private bool reload = false;
     public float mGravity = -30.0f;
     public float mJumpHeight = 1.0f;
 
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //ApplyGravity();
+        ApplyGravity();
     }
 
     public void HandleInputs()
@@ -78,11 +79,24 @@ public class PlayerMovement : MonoBehaviour
             crouch = !crouch;
             Crouch();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            reload = !reload;
+            Reload();
+        }
+
     }
 
     public void Move()
     {
-        if (crouch) return;
+        //if (crouch) return;
+
+        if (crouch)
+        {
+            mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
+            mAnimator.SetFloat("PosZ", vInput * speed / (2.0f * mWalkSpeed), 0.2f, Time.deltaTime);
+        }
 
         // We shall apply movement to the game object here.
         if (mAnimator == null) return;
@@ -104,8 +118,14 @@ public class PlayerMovement : MonoBehaviour
         forward.y = 0.0f;
 
         mCharacterController.Move(forward * vInput * speed * Time.deltaTime);
-        mAnimator.SetFloat("PosX", 0);
-        mAnimator.SetFloat("PosZ", vInput * speed / (2.0f * mWalkSpeed));
+        mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
+        mAnimator.SetFloat("PosZ", vInput * speed / (2.0f * mWalkSpeed), 0.2f, Time.deltaTime);
+
+        //Vector3 right = transform.TransformDirection(Vector3.right).normalized;
+        //right.y = 0.0f;
+
+        //mCharacterController.Move(right * hInput * speed * Time.deltaTime);
+        //mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
 
         if (jump)
         {
@@ -137,6 +157,11 @@ public class PlayerMovement : MonoBehaviour
         {
             CameraConstants.CameraPositionOffset = tempHeight;
         }
+    }
+
+    void Reload()
+    {
+        mAnimator.SetTrigger("Reload");
     }
 
     void ApplyGravity()
