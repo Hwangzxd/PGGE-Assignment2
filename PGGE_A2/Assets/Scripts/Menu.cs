@@ -40,7 +40,9 @@ public class Menu : MonoBehaviour
     public void OnClickBack()
     {
         //Debug.Log("Loading menu");
-        SceneManager.LoadScene("Menu");
+        soundPlayer.PlayOneShot(pressed);
+        StartCoroutine(LoadMenuScene());
+        //SceneManager.LoadScene("Menu");
     }
 
     public void OnHover()
@@ -58,5 +60,11 @@ public class Menu : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("Multiplayer_Launcher");
+    }
+
+    private IEnumerator LoadMenuScene()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("Menu");
     }
 }
