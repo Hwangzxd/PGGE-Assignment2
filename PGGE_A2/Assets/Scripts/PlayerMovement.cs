@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ApplyGravity();
+        //ApplyGravity();
     }
 
     public void HandleInputs()
@@ -90,29 +90,25 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move()
     {
-        //if (crouch) return;
-
-        if (crouch)
-        {
-            mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
-            mAnimator.SetFloat("PosZ", vInput * speed / (2.0f * mWalkSpeed), 0.2f, Time.deltaTime);
-        }
+        if (crouch) return;
 
         // We shall apply movement to the game object here.
         if (mAnimator == null) return;
-        if (mFollowCameraForward)
-        {
-            // rotate Player towards the camera forward.
-            Vector3 eu = Camera.main.transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                Quaternion.Euler(0.0f, eu.y, 0.0f),
-                mTurnRate * Time.deltaTime);
-        }
-        else
-        {
-            transform.Rotate(0.0f, hInput * mRotationSpeed * Time.deltaTime, 0.0f);
-        }
+        //if (mFollowCameraForward)
+        //{
+        //    // rotate Player towards the camera forward.
+        //    Vector3 eu = Camera.main.transform.rotation.eulerAngles;
+        //    transform.rotation = Quaternion.RotateTowards(
+        //        transform.rotation,
+        //        Quaternion.Euler(0.0f, eu.y, 0.0f),
+        //        mTurnRate * Time.deltaTime);
+        //}
+        //else
+        //{
+        //    transform.Rotate(0.0f, hInput * mRotationSpeed * Time.deltaTime, 0.0f);
+        //}
+
+        RotatePlayer();
 
         Vector3 forward = transform.TransformDirection(Vector3.forward).normalized;
         forward.y = 0.0f;
@@ -120,12 +116,6 @@ public class PlayerMovement : MonoBehaviour
         mCharacterController.Move(forward * vInput * speed * Time.deltaTime);
         mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
         mAnimator.SetFloat("PosZ", vInput * speed / (2.0f * mWalkSpeed), 0.2f, Time.deltaTime);
-
-        //Vector3 right = transform.TransformDirection(Vector3.right).normalized;
-        //right.y = 0.0f;
-
-        //mCharacterController.Move(right * hInput * speed * Time.deltaTime);
-        //mAnimator.SetFloat("PosX", 0, 0.2f, Time.deltaTime);
 
         if (jump)
         {
@@ -135,9 +125,39 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
+    private void RotatePlayer()
+    {
+        if (mFollowCameraForward)
+        {
+            //// rotate Player towards the camera forward.
+            //Vector3 eu = Camera.main.transform.rotation.eulerAngles;
+            //transform.rotation = Quaternion.RotateTowards(
+            //    transform.rotation,
+            //    Quaternion.Euler(0.0f, eu.y, 0.0f),
+            //    mTurnRate * Time.deltaTime);
+
+            RotatePlayerTowardsCamera();
+        }
+        else
+        {
+            transform.Rotate(0.0f, hInput * mRotationSpeed * Time.deltaTime, 0.0f);
+        }
+    }
+
+    private void RotatePlayerTowardsCamera()
+    {
+        // rotate Player towards the camera forward.
+        Vector3 eu = Camera.main.transform.rotation.eulerAngles;
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            Quaternion.Euler(0.0f, eu.y, 0.0f),
+            mTurnRate * Time.deltaTime);
+    }
+
     void Jump()
     {
-        mAnimator.SetTrigger("Jump");
+        //mAnimator.SetTrigger("Jump");
+        TriggerAnimator("Jump");
         mVelocity.y += Mathf.Sqrt(mJumpHeight * -2f * mGravity);
     }
 
@@ -161,7 +181,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Reload()
     {
-        mAnimator.SetTrigger("Reload");
+        //mAnimator.SetTrigger("Reload");
+        TriggerAnimator("Reload");
+    }
+
+    void TriggerAnimator(string triggerName)
+    {
+        mAnimator.SetTrigger(triggerName);
     }
 
     void ApplyGravity()
