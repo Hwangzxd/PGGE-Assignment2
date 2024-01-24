@@ -90,10 +90,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move()
     {
-        if (crouch) return;
+        //if (crouch) return;
 
-        // We shall apply movement to the game object here.
-        if (mAnimator == null) return;
+        //// We shall apply movement to the game object here.
+        //if (mAnimator == null) return;
+
+        if (crouch || mAnimator == null)
+        {
+            return;
+        }
+
         //if (mFollowCameraForward)
         //{
         //    // rotate Player towards the camera forward.
