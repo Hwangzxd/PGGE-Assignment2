@@ -14,6 +14,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     private ThirdPersonCamera mThirdPersonCamera;
 
+    private string nickname = "Null";
+
     private void Start()
     {
         Transform randomSpawnTransform = mSpawnPoints.GetSpawnPoint();
@@ -22,12 +24,19 @@ public class PlayerManager : MonoBehaviourPunCallbacks
             randomSpawnTransform.rotation,
             0);
 
+        mPlayerGameObject.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
+
         mThirdPersonCamera = Camera.main.gameObject.AddComponent<ThirdPersonCamera>();
 
         //mPlayerGameObject.GetComponent<PlayerMovement>().mFollowCameraForward = false;
         mThirdPersonCamera.mPlayer = mPlayerGameObject.transform;
         mThirdPersonCamera.mDamping = 20.0f;
         mThirdPersonCamera.mCameraType = CameraType.Follow_Track_Pos_Rot;
+    }
+
+    public void ChangeNickname(string name)
+    {
+        nickname = name;
     }
 
     public void LeaveRoom()

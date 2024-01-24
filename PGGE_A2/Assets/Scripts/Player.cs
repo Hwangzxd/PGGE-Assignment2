@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PGGE.Patterns;
 using PGGE;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     public AudioClip mAudioClipGunShot;
     public AudioClip mAudioClipReload;
 
+    public Image RadialBar;
 
     public GameObject mBulletPrefab;
     public float mBulletSpeed = 10.0f;
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour
         mFsm.SetCurrentState((int)PlayerStateType.MOVEMENT);
 
         PlayerConstants.PlayerMask = mPlayerMask;
+
+        SetAmmo();
     }
 
     void Update()
@@ -225,5 +229,10 @@ public class Player : MonoBehaviour
         mFiring[id] = false;
         Debug.Log("called");
         mBulletsInMagazine -= 1;
+    }
+
+    void SetAmmo()
+    {
+        RadialBar.fillAmount = (float)mAmunitionCount / mBulletsInMagazine;
     }
 }

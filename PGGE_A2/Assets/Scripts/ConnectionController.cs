@@ -28,7 +28,6 @@ namespace PGGE
                 PhotonNetwork.AutomaticallySyncScene = true;
             }
 
-
             // Start is called before the first frame update
             void Start()
             {
@@ -57,6 +56,7 @@ namespace PGGE
                     PhotonNetwork.GameVersion = gameVersion;
                 }
             }
+
             public override void OnConnectedToMaster()
             {
                 if (isConnecting)

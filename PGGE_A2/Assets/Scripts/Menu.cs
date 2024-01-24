@@ -8,6 +8,7 @@ public class Menu : MonoBehaviour
     public AudioSource soundPlayer;
     public AudioClip hover;
     public AudioClip pressed;
+    public AudioClip start;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,11 @@ public class Menu : MonoBehaviour
         soundPlayer.PlayOneShot(pressed);
         StartCoroutine(LoadMenuScene());
         //SceneManager.LoadScene("Menu");
+    }
+
+    public void OnClickJoin()
+    {
+        soundPlayer.PlayOneShot(start);
     }
 
     public void OnHover()

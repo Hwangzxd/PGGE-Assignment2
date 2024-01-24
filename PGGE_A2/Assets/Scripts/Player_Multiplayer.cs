@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using PGGE.Patterns;
 using Photon.Pun;
+using UnityEngine.UI;
+using TMPro;
+using Photon.Pun.Demo.Cockpit;
 
 public class Player_Multiplayer : MonoBehaviour
 {
@@ -34,6 +37,11 @@ public class Player_Multiplayer : MonoBehaviour
     public Canvas mCanvas;
     public RectTransform mCrossHair;
 
+    public Image RadialBar;
+    public TextMeshProUGUI AmmoCount;
+
+    public string nickname;
+    public TextMeshPro Nickname;
 
     public GameObject mBulletPrefab;
     public float mBulletSpeed = 10.0f;
@@ -47,10 +55,17 @@ public class Player_Multiplayer : MonoBehaviour
     {
         mPhotonView = GetComponent<PhotonView>();
 
+        if (!mPhotonView.IsMine)
+        {
+            mCanvas.GetComponent<Canvas>().enabled = false;
+        }
+
         mFsm.Add(new PlayerState_Multiplayer_MOVEMENT(this));
         mFsm.Add(new PlayerState_Multiplayer_ATTACK(this));
         mFsm.Add(new PlayerState_Multiplayer_RELOAD(this));
         mFsm.SetCurrentState((int)PlayerStateType.MOVEMENT);
+
+        SetAmmo();
     }
 
     void Update()
@@ -96,6 +111,8 @@ public class Player_Multiplayer : MonoBehaviour
         {
             mAttackButtons[2] = false;
         }
+
+        SetAmmo();
     }
 
     public void Aim()
@@ -188,7 +205,7 @@ public class Player_Multiplayer : MonoBehaviour
 
     public void Reload()
     {
-
+ 
     }
 
     public void Fire(int id)
@@ -219,5 +236,20 @@ public class Player_Multiplayer : MonoBehaviour
         yield return new WaitForSeconds(1.0f / RoundsPerSecond[id]);
         mFiring[id] = false;
         mBulletsInMagazine -= 1;
+        SetAmmo();
+    }
+
+    public void SetAmmo()
+    {
+        RadialBar.fillAmount = (float)mBulletsInMagazine / mMaxAmunitionBeforeReload;
+        AmmoCount.text = mBulletsInMagazine.ToString();
+    }
+
+    [PunRPC]
+    public void SetNickname(string name)
+    {
+        nickname = name;
+
+        Nickname.text = nickname;
     }
 }
