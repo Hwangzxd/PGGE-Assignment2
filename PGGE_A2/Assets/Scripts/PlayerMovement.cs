@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PGGE;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -26,6 +27,14 @@ public class PlayerMovement : MonoBehaviour
     private bool reload = false;
     public float mGravity = -30.0f;
     public float mJumpHeight = 1.0f;
+
+    public Image staminaBar;
+
+    public float stamina, maxStamina;
+    public float runCost;
+    public float chargeRate;
+
+    private Coroutine recharge;
 
     private Vector3 mVelocity = new Vector3(0.0f, 0.0f, 0.0f);
 
@@ -61,7 +70,17 @@ public class PlayerMovement : MonoBehaviour
         speed = mWalkSpeed;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            speed = mWalkSpeed * 2.0f;
+            if (stamina != 0)
+            {
+                speed = mWalkSpeed * 2.0f;
+            }
+
+            stamina -= runCost * Time.deltaTime;
+            if (stamina < 0) stamina = 0;
+            staminaBar.fillAmount = stamina / maxStamina;
+
+            if (recharge != null) StopCoroutine(recharge);
+            recharge = StartCoroutine(RechargeStamina());
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -206,5 +225,18 @@ public class PlayerMovement : MonoBehaviour
         mCharacterController.Move(mVelocity * Time.deltaTime);
         if (mCharacterController.isGrounded && mVelocity.y < 0)
             mVelocity.y = 0f;
+    }
+
+    private IEnumerator RechargeStamina()
+    {
+        yield return new WaitForSeconds(1f);
+
+        while (stamina < maxStamina)
+        {
+            stamina += chargeRate / 10f;
+            if (stamina > maxStamina) stamina = maxStamina;
+            staminaBar.fillAmount = stamina / maxStamina;
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

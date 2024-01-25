@@ -1040,6 +1040,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2028064569042939162, guid: 3e2ee691d461bd0459ddead86904069e, type: 3}
+      propertyPath: stamina
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2028064569042939162, guid: 3e2ee691d461bd0459ddead86904069e, type: 3}
+      propertyPath: maxStamina
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7474352918603793060, guid: 3e2ee691d461bd0459ddead86904069e, type: 3}
       propertyPath: m_RootOrder
       value: 3
