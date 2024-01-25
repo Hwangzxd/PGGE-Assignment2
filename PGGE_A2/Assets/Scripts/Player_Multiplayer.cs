@@ -55,6 +55,7 @@ public class Player_Multiplayer : MonoBehaviour
     {
         mPhotonView = GetComponent<PhotonView>();
 
+        // check if the PhotonView belongs to the player, disables all other canvases
         if (!mPhotonView.IsMine)
         {
             mCanvas.GetComponent<Canvas>().enabled = false;
@@ -236,20 +237,26 @@ public class Player_Multiplayer : MonoBehaviour
         yield return new WaitForSeconds(1.0f / RoundsPerSecond[id]);
         mFiring[id] = false;
         mBulletsInMagazine -= 1;
+        // update ammo count
         SetAmmo();
     }
 
+    // function for setting ammo count 
     public void SetAmmo()
     {
+        // update radial bar fill amount based on the current bullets in the magazine and maximum ammunition before reload
         RadialBar.fillAmount = (float)mBulletsInMagazine / mMaxAmunitionBeforeReload;
+        // update the text display of the ammo count
         AmmoCount.text = mBulletsInMagazine.ToString();
     }
 
     [PunRPC]
     public void SetNickname(string name)
     {
+        // set the player nickname received through the RPC
         nickname = name;
 
+        // update the display of the player nickname
         Nickname.text = nickname;
     }
 }

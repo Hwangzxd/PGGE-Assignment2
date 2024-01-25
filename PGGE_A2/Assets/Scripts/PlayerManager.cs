@@ -14,8 +14,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     private ThirdPersonCamera mThirdPersonCamera;
 
-    private string nickname = "Null";
-
     private void Start()
     {
         Transform randomSpawnTransform = mSpawnPoints.GetSpawnPoint();
@@ -24,6 +22,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
             randomSpawnTransform.rotation,
             0);
 
+        // use PhotonView to call the "SetNickname" RPC method on all buffered clients, updating their player nickname
         mPlayerGameObject.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
 
         mThirdPersonCamera = Camera.main.gameObject.AddComponent<ThirdPersonCamera>();
@@ -32,11 +31,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         mThirdPersonCamera.mPlayer = mPlayerGameObject.transform;
         mThirdPersonCamera.mDamping = 20.0f;
         mThirdPersonCamera.mCameraType = CameraType.Follow_Track_Pos_Rot;
-    }
-
-    public void ChangeNickname(string name)
-    {
-        nickname = name;
     }
 
     public void LeaveRoom()

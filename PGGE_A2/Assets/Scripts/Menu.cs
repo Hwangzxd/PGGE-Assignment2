@@ -46,30 +46,38 @@ public class Menu : MonoBehaviour
         //SceneManager.LoadScene("Menu");
     }
 
+    // plays start sound when join button is clicked
     public void OnClickJoin()
     {
         soundPlayer.PlayOneShot(start);
     }
 
+    // plays hover sound when mouse is hovered over button
     public void OnHover()
     {
         soundPlayer.PlayOneShot(hover);
     }
 
+    // coroutine for loading singleplayer scene
     private IEnumerator LoadSinglePlayerScene()
     {
+        // wait 1 second for sound to finish playing
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("SinglePlayer");
     }
 
+    // coroutine for loading multiplayer scene
     private IEnumerator LoadMultiPlayerScene()
     {
+        // wait 1 second for sound to finish playing
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("Multiplayer_Launcher");
     }
 
+    // coroutine for loading menu scene
     private IEnumerator LoadMenuScene()
     {
+        // wait 1 second for sound to finish playing
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("Menu");
     }

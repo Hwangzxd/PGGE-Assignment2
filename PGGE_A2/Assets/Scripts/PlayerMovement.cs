@@ -70,16 +70,22 @@ public class PlayerMovement : MonoBehaviour
         speed = mWalkSpeed;
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            // check if stamina is 0, disable sprint
             if (stamina != 0)
             {
                 speed = mWalkSpeed * 2.0f;
             }
 
+            // stamina gradually depletes from runCost and time elapsed
             stamina -= runCost * Time.deltaTime;
+            // reset stamina to 0 if less than 0
             if (stamina < 0) stamina = 0;
+            // update stamina bar fill amount
             staminaBar.fillAmount = stamina / maxStamina;
 
+            // if stamina recharge coroutine is running, stop it to wait for 1 second before running again
             if (recharge != null) StopCoroutine(recharge);
+            // restart coroutine for recharging stamina
             recharge = StartCoroutine(RechargeStamina());
         }
 
@@ -114,6 +120,7 @@ public class PlayerMovement : MonoBehaviour
         //// We shall apply movement to the game object here.
         //if (mAnimator == null) return;
 
+        // combine both if-return statements
         if (crouch || mAnimator == null)
         {
             return;
@@ -150,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
+    // extracted rotate player logic for organization and readability
     private void RotatePlayer()
     {
         if (mFollowCameraForward)
@@ -169,6 +177,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // extracted rotate player towards camera forward logic for organization and readability
     private void RotatePlayerTowardsCamera()
     {
         // rotate Player towards the camera forward.
@@ -210,6 +219,7 @@ public class PlayerMovement : MonoBehaviour
         TriggerAnimator("Reload");
     }
 
+    // separated the logic for triggering animations into individual methods for better readability
     void TriggerAnimator(string triggerName)
     {
         mAnimator.SetTrigger(triggerName);
@@ -227,14 +237,20 @@ public class PlayerMovement : MonoBehaviour
             mVelocity.y = 0f;
     }
 
+    // coroutine for recharging stamina
     private IEnumerator RechargeStamina()
     {
+        // wait for 1 second before recharge
         yield return new WaitForSeconds(1f);
 
+        // check if stamina is less than max stamina
         while (stamina < maxStamina)
         {
+            // recharge stamina using chargeRate value
             stamina += chargeRate / 10f;
+            // reset stamina to max stamina if overflow
             if (stamina > maxStamina) stamina = maxStamina;
+            // update stamina bar fill amount
             staminaBar.fillAmount = stamina / maxStamina;
             yield return new WaitForSeconds(1f);
         }
